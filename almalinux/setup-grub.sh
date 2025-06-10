@@ -69,65 +69,47 @@ download_grub_theme() {
     TEMP_DIR=$(mktemp -d)
     cd "$TEMP_DIR"
     
-    # URLs de los archivos del tema desde tu repositorio
-    BASE_URL="https://raw.githubusercontent.com/wirisoft/Wirisoft.Dotfiles/main/almalinux/grub-themes"
+    # Descargar el repositorio completo como ZIP (más confiable)
+    print_status "Descargando repositorio completo..."
+    wget -q -O wirisoft-dotfiles.zip https://github.com/wirisoft/Wirisoft.Dotfiles/archive/refs/heads/main.zip
     
-    # Crear estructura del tema
-    mkdir -p Elegant-forest-float-left-dark
-    cd Elegant-forest-float-left-dark
-    
-    print_status "Descargando archivos del tema..."
-    
-    # Descargar archivos principales (ajustar según lo que tengas en tu carpeta)
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/theme.txt" -O theme.txt
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/background.jpg" -O background.jpg
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/logo.png" -O logo.png
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/info.png" -O info.png
-    
-    # Descargar fuentes
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/terminus-12.pf2" -O terminus-12.pf2
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/terminus-14.pf2" -O terminus-14.pf2
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/terminus-16.pf2" -O terminus-16.pf2
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/terminus-18.pf2" -O terminus-18.pf2
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/unifont-16.pf2" -O unifont-16.pf2
-    
-    # Descargar selectores
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/select_c.png" -O select_c.png
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/select_e.png" -O select_e.png
-    wget -q "$BASE_URL/Elegant-forest-float-left-dark/select_w.png" -O select_w.png
-    
-    # Crear directorio de iconos y descargarlos
-    mkdir -p icons
-    # Aquí agregarías los iconos si los tienes
-    
-    print_success "Archivos del tema descargados"
-    
-    # Verificar que se descargaron los archivos principales
-    if [ ! -f "theme.txt" ] || [ ! -f "background.jpg" ]; then
-        print_error "Error descargando archivos del tema"
-        print_warning "Continuando con instalación manual..."
-        manual_installation
-        return
+    if [ ! -f "wirisoft-dotfiles.zip" ]; then
+        print_error "Error descargando el repositorio"
+        exit 1
     fi
+    
+    # Extraer ZIP
+    unzip -q wirisoft-dotfiles.zip
+    
+    # Verificar que existe la carpeta del tema
+    THEME_SOURCE="Wirisoft.Dotfiles-main/almalinux/Elegant-forest-float-left-dark"
+    if [ ! -d "$THEME_SOURCE" ]; then
+        print_error "No se encontró la carpeta del tema en el repositorio"
+        exit 1
+    fi
+    
+    # Copiar tema a directorio temporal
+    cp -r "$THEME_SOURCE" ./
+    
+    print_success "Tema descargado correctamente desde GitHub"
+    
+    # Verificar archivos importantes
+    if [ ! -f "Elegant-forest-float-left-dark/theme.txt" ]; then
+        print_error "Archivo theme.txt no encontrado"
+        exit 1
+    fi
+    
+    if [ ! -f "Elegant-forest-float-left-dark/background.jpg" ]; then
+        print_error "Archivo background.jpg no encontrado"
+        exit 1
+    fi
+    
+    print_success "Archivos del tema verificados correctamente"
 }
 
 # Instalación manual alternativa
 manual_installation() {
-    print_status "Descargando tema completo como ZIP..."
-    cd ~/Downloads
-    
-    # Descargar el repositorio completo
-    wget -O wirisoft-dotfiles.zip https://github.com/wirisoft/Wirisoft.Dotfiles/archive/refs/heads/main.zip
-    unzip -o wirisoft-dotfiles.zip
-    
-    # Copiar tema desde el archivo descargado
-    if [ -d "Wirisoft.Dotfiles-main/almalinux/grub-themes" ]; then
-        TEMP_DIR="$PWD/Wirisoft.Dotfiles-main/almalinux/grub-themes"
-        print_success "Tema encontrado en descarga ZIP"
-    else
-        print_error "No se pudo encontrar el tema en el repositorio"
-        exit 1
-    fi
+    print_error "Esta función ya no es necesaria - se removió"
 }
 
 # Instalar tema GRUB
@@ -149,7 +131,13 @@ install_grub_theme() {
     # Establecer permisos correctos
     sudo chmod -R 755 /boot/grub2/themes/Elegant-forest-float-left-dark/
     
-    print_success "Tema GRUB instalado en /boot/grub2/themes/Elegant-forest-float-left-dark"
+    # Verificar instalación
+    if [ -f "/boot/grub2/themes/Elegant-forest-float-left-dark/theme.txt" ]; then
+        print_success "Tema GRUB instalado correctamente en /boot/grub2/themes/Elegant-forest-float-left-dark"
+    else
+        print_error "Error instalando el tema GRUB"
+        exit 1
+    fi
 }
 
 # Configurar GRUB
