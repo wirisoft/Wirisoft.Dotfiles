@@ -13,8 +13,8 @@ Instalación automatizada del driver DisplayLink para docks USB en AlmaLinux, Ce
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/dotfiles.git
-cd dotfiles/displayDriverLinkUSB
+git clone https://github.com/wirisoft/Wirisoft.Dotfiles.git
+cd Wirisoft.Dotfiles/almalinux/displayDriverLinkUSB
 
 # Ejecutar el script de instalación
 chmod +x install-displaylink.sh
@@ -24,7 +24,7 @@ sudo ./install-displaylink.sh
 ## 📦 Contenido del Repositorio
 
 ```
-displayDriverLinkUSB/
+almalinux/displayDriverLinkUSB/
 ├── README.md                                              # Este archivo
 ├── install-displaylink.sh                                 # Script de instalación automatizado
 ├── uninstall-displaylink.sh                              # Script de desinstalación
@@ -162,6 +162,7 @@ Si tienes problemas:
 1. Revisa los logs: `journalctl -u displaylink-driver.service`
 2. Verifica la compatibilidad de tu dock en el sitio oficial de DisplayLink
 3. Consulta el [foro oficial de DisplayLink](https://support.displaylink.com)
+4. Abre un issue en el [repositorio de GitHub](https://github.com/wirisoft/Wirisoft.Dotfiles/issues)
 
 ## 📜 Licencia
 
@@ -169,6 +170,7 @@ Este proyecto contiene el driver oficial de DisplayLink. Consulta la licencia of
 
 ---
 
-**Autor:** Tu Nombre  
+**Autor:** Wirisoft  
+**Repositorio:** [Wirisoft.Dotfiles](https://github.com/wirisoft/Wirisoft.Dotfiles)  
 **Versión:** 1.0  
 **Última actualización:** $(date +'%Y-%m-%d')
